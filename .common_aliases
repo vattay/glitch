@@ -19,7 +19,7 @@ glitch-new () {
 }
 
 glitch-build () {
-    d0-bt $IMAGE .
+    docker build -t $IMAGE .
 }
 
 glitch-build-nocache () {
