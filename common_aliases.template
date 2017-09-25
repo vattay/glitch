@@ -1,0 +1,4 @@
+alias d0-prune-a='docker system prune -a '
+alias d0-run-it='docker run -it --rm '
+alias d0-bt='docker build -t'
+alias d0-run-it-dsock='docker run -it --rm -v /var/run/docker.sock:/var/run/docker.sock'
