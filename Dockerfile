@@ -34,6 +34,10 @@ VOLUME /var/shared
 WORKDIR /home/$DEV_USER
 ENV HOME /home/$DEV_USER
 
+RUN mkdir workspace/ \
+  && touch workspace/placeholder \
+  && chown -R $DEV_USER:$DEV_USER workspace
+
 RUN chown -R $DEV_USER: /home/$DEV_USER
 USER $DEV_USER
 
