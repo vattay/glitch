@@ -1,5 +1,7 @@
 IMAGE='oxide/glitch'
 
+alias d0-clean='docker system prune'
+alias d0-stop-all='docker stop $(docker ps -q)'
 alias d0-purge='docker system prune -a '
 alias d0-run-it='docker run -it --rm '
 alias d0-bt='docker build -t'
@@ -7,12 +9,17 @@ alias d0-run-it-dsock='docker run -it --rm -v /var/run/docker.sock:/var/run/dock
 
 d0-rs () {
     DOCKER_GID=$(ls -nl /var/run/docker.sock | cut -d ' ' -f4)
-    docker run -it --rm --name="$2" --mount source=bubble,target=/var/shared \
-      -v /var/run/docker.sock:/var/run/docker.sock --group-add $DOCKER_GID $1
+    docker run -it --rm \
+      --name="$2" \
+      --mount source=bubble,target=/var/shared \
+      -v /var/run/docker.sock:/var/run/docker.sock \
+      --mount type=bind,source="$(pwd)",target=/home/dev/workspace \
+      --group-add $DOCKER_GID \
+      $1
 }
 
 glitch () {
-    d0-rs $IMAGE ""
+    d0-rs $IMAGE "" $1
 }
 
 glitch-new () {
