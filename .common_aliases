@@ -1,0 +1,28 @@
+IMAGE='oxide/glitch'
+
+alias d0-purge='docker system prune -a '
+alias d0-run-it='docker run -it --rm '
+alias d0-bt='docker build -t'
+alias d0-run-it-dsock='docker run -it --rm -v /var/run/docker.sock:/var/run/docker.sock'
+
+d0-rs () {
+    DOCKER_GID=$(ls -nl /var/run/docker.sock | cut -d ' ' -f4)
+    docker run -it --rm --name="$2" -v /var/run/docker.sock:/var/run/docker.sock --group-add $DOCKER_GID $1
+}
+
+glitch () {
+    d0-rs $IMAGE ""
+}
+
+glitch-new () {
+    d0-rs $IMAGE $1
+}
+
+glitch-build () {
+    d0-bt $IMAGE .
+}
+
+glitch-build-nocache () {
+
+    docker build --no-cache -t $IMAGE .
+}
