@@ -12,7 +12,7 @@ d0-rs () {
     docker run -it --rm \
       --mount source=glitch-volume,target=/var/shared \
       -v /var/run/docker.sock:/var/run/docker.sock \
-      --mount type=bind,source="$(pwd)",target=/home/dev/workspace \
+      --mount type=bind,source="$(pwd)",target=/home/dev/workspace/bound \
       --group-add $DOCKER_GID \
       $@
 }
