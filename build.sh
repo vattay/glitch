@@ -1,5 +1,7 @@
 #!/bin/bash
 
-source .common_aliases
+IMAGE='oxide/glitch'
 
-glitch-build
+source .glitch_aliases
+
+docker build -t $IMAGE .
