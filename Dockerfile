@@ -8,7 +8,8 @@ RUN apt-get update && apt-get install -y \
 #  docker.io \
   zsh \
   sudo \
-  curl
+  curl \
+  psmisc
 
 # Get the docker client only. This could break as it is the master branch build of the client. Use the docker.io package in that case.
 WORKDIR /tmp
