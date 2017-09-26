@@ -21,7 +21,7 @@ d0-rs () {
     docker-sock-gid
     docker run -it --rm \
       -v /var/run/docker.sock:/var/run/docker.sock \
-      -v "$(pwd)":/home/dev/workspace/bound \
+      -v "$(pwd)":/root/workspace/bound \
       -v glitch-volume:/var/shared \
       --group-add $DOCKER_GID \
       $@

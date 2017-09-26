@@ -1,7 +1,5 @@
 FROM ubuntu:16.04
 
-ENV DEV_USER dev
-
 RUN apt-get update && apt-get install -y \
   curl \
   git \
@@ -21,28 +19,18 @@ RUN curl -s https://master.dockerproject.org/linux/x86_64/docker.sha256 \
   && mv docker /usr/bin/docker \
   && chmod ugo+x /usr/bin/docker
 
-RUN useradd $DEV_USER \
-  && echo "$DEV_USER:$DEV_USER" | chpasswd \ 
-  && adduser $DEV_USER sudo \
-  && mkdir /home/$DEV_USER \
-  && mkdir /home/$DEV_USER/workspace \
-  && touch /home/$DEV_USER/workspace/placeholder \
-  && chown -R $DEV_USER: /home/$DEV_USER
+WORKDIR /root
+RUN mkdir workspace \
+  && mkdir workspace/bound 
 
-RUN mkdir /var/shared/ \
-  && touch /var/shared/placeholder \ 
-  && chown -R $DEV_USER:$DEV_USER /var/shared
+RUN mkdir /var/shared 
 VOLUME /var/shared
-
-WORKDIR /home/$DEV_USER
-
-USER $DEV_USER
 
 RUN git clone git://github.com/robbyrussell/oh-my-zsh.git .oh-my-zsh 
 
 COPY zshrc.template .zshrc
 COPY .glitch_aliases .
 
-WORKDIR /home/$DEV_USER/workspace/bound
+WORKDIR /root/workspace/bound
 
 CMD ["/bin/zsh"]
