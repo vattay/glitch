@@ -1,0 +1,52 @@
+IMAGE='oxide/glitch'
+
+alias d0-clean='docker system prune'
+alias d0-stop-all='docker stop $(docker ps -q)'
+alias d0-purge='docker system prune -a '
+alias d0-run-it='docker run -it --rm '
+alias d0-bt='docker build -t'
+alias d0-run-it-dsock='docker run -it --rm -v /var/run/docker.sock:/var/run/docker.sock'
+
+DOCKER_GID=''
+docker-sock-gid () {
+    UN=$(uname)
+    echo $UN
+    if [ "$UN" = "Darwin" ]; then
+        echo "Mac"
+        DOCKER_GID=$(docker run --rm -it --privileged --pid=host debian nsenter -t 1 -m -u -n -i ls -anl /var/run/docker.sock | cut -d ' ' -f 14) 
+        echo "Mac detected, using hyperkit vm docker.sock group $DOCKER_GID"
+    else
+        echo "Nonmac"
+        DOCKER_GID=$(ls -nl /var/run/docker.sock | cut -d ' ' -f4)
+    fi
+}
+
+d0-rs () {
+    docker-sock-gid
+    echo "Docker Socket GID: $DOCKER_GID"
+    docker run -it --rm \
+      --mount source=glitch-volume,target=/var/shared \
+      -v /var/run/docker.sock:/var/run/docker.sock \
+      --mount type=bind,source="$(pwd)",target=/home/dev/workspace/bound \
+      --group-add $DOCKER_GID \
+      $@
+}
+
+glitch () {
+    d0-rs $@ $IMAGE
+}
+
+glitch-new () {
+    NAME=$1
+    shift 1
+    d0-rs --name="$NAME" $@ $IMAGE 
+}
+
+glitch-build () {
+    docker build -t $IMAGE .
+}
+
+glitch-build-nocache () {
+
+    docker build --no-cache -t $IMAGE .
+}
