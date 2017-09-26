@@ -1,5 +1,3 @@
-IMAGE='oxide/glitch'
-
 alias d0-clean='docker system prune'
 alias d0-stop-all='docker stop $(docker ps -q)'
 alias d0-purge='docker system prune -a '
