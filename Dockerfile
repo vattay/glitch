@@ -27,8 +27,7 @@ RUN useradd $DEV_USER \
   && adduser $DEV_USER sudo \
   && mkdir /home/$DEV_USER \
   && mkdir /home/$DEV_USER/workspace \
-  && touch /home/$DEV_USER/workspace/placeholder \
-  && chown -R $DEV_USER: /home/$DEV_USER
+  && touch /home/$DEV_USER/workspace/placeholder
 
 RUN mkdir /var/shared/ \
   && touch /var/shared/placeholder \ 
@@ -37,13 +36,16 @@ VOLUME /var/shared
 
 WORKDIR /home/$DEV_USER
 
-USER $DEV_USER
 
 RUN git clone git://github.com/robbyrussell/oh-my-zsh.git .oh-my-zsh 
 
-COPY zshrc.template .zshrc
+COPY .glitch_env .
 COPY .glitch_aliases .
+COPY zshrc.template .zshrc
+
+RUN chown -R $DEV_USER: /home/$DEV_USER
 
 WORKDIR /home/$DEV_USER/workspace/bound
 
+USER $DEV_USER
 CMD ["/bin/zsh"]

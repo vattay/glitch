@@ -1,3 +1,5 @@
+source .glitch_env
+
 alias d0-clean='docker system prune'
 alias d0-stop-all='docker stop $(docker ps -q)'
 alias d0-purge='docker system prune -a '
@@ -19,7 +21,7 @@ d0-rs () {
     docker-sock-gid
     docker run -it --rm \
       -v /var/run/docker.sock:/var/run/docker.sock \
-      -v "$(pwd)":/home/dev/workspace/bound \
+      -v $(pwd):/home/dev/workspace/bound \
       -v glitch-volume:/var/shared \
       --group-add $DOCKER_GID \
       $@
