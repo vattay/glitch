@@ -10,20 +10,15 @@ alias d0-run-it-dsock='docker run -it --rm -v /var/run/docker.sock:/var/run/dock
 DOCKER_GID=''
 docker-sock-gid () {
     UN=$(uname)
-    echo $UN
     if [ "$UN" = "Darwin" ]; then
-        echo "Mac"
         DOCKER_GID=$(docker run --rm -it --privileged --pid=host debian nsenter -t 1 -m -u -n -i ls -anl /var/run/docker.sock | cut -d ' ' -f 14) 
-        echo "Mac detected, using hyperkit vm docker.sock group $DOCKER_GID"
     else
-        echo "Nonmac"
         DOCKER_GID=$(ls -nl /var/run/docker.sock | cut -d ' ' -f4)
     fi
 }
 
 d0-rs () {
     docker-sock-gid
-    echo "Docker Socket GID: $DOCKER_GID"
     docker run -it --rm \
       -v /var/run/docker.sock:/var/run/docker.sock \
       -v "$(pwd)":/home/dev/workspace/bound \
