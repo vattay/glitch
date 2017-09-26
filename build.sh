@@ -1,7 +1,6 @@
 #!/bin/bash
 
-IMAGE='oxide/glitch'
-
+source .glitch_env
 source .glitch_aliases
 
 docker build -t $IMAGE .

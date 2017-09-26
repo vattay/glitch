@@ -1,10 +1,11 @@
-FROM ubuntu:16.04
+FROM debian:stretch
 
 ENV DEV_USER dev
 
 RUN apt-get update && apt-get install -y \
   curl \
   git \
+  psmisc \
   sudo \
   vim \
   zsh 
