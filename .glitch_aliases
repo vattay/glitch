@@ -34,7 +34,6 @@ d0-rs () {
         -v $GLITCH_VOLUME:/var/shared \
         $DOCKER_SOCKET_GID_ADD \
         $@"
-    echo $CMD
     eval $CMD
 }
 
