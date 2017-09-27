@@ -1,13 +1,15 @@
-source .glitch_env
+IMAGE="oxide/glitch:minimized"
 
 alias d0-clean='docker system prune'
-alias d0-stop-all='docker stop $(docker ps -q)'
 alias d0-purge='docker system prune -a '
-alias d0-run-it='docker run -it --rm '
-alias d0-bt='docker build -t'
-alias d0-run-it-dsock='docker run -it --rm -v /var/run/docker.sock:/var/run/docker.sock'
+alias d0-stop-all='docker stop $(docker ps -q)'
 
+DOCKER_SOCK=/var/run/docker.sock
 DOCKER_GID=''
+DOCKER_SOCKET_MOUNT=""
+DOCKER_CWD_BIND="-v $(pwd):/home/dev/workspace/bound"
+GLITCH_VOLUME='glitch-volume'
+
 docker-sock-gid () {
     UN=$(uname)
     if [ "$UN" = "Darwin" ]; then
@@ -18,13 +20,26 @@ docker-sock-gid () {
 }
 
 d0-rs () {
-    docker-sock-gid
-    docker run -it --rm \
-      -v /var/run/docker.sock:/var/run/docker.sock \
-      -v $(pwd):/home/dev/workspace/bound \
-      -v glitch-volume:/var/shared \
-      --group-add $DOCKER_GID \
-      $@
+    if [ -e /var/run/docker.sock ]; then 
+        echo "Detected docker socket, bind mounting to container."
+        docker-sock-gid
+        DOCKER_SOCKET_MOUNT="-v $DOCKER_SOCK:$DOCKER_SOCK"
+        DOCKER_SOCKET_GID_ADD="--group-add $DOCKER_GID"
+    else
+        echo "Glitch requires $DOCKER_SOCK to run! Did you forget to bind mount it?"
+        exit 1
+    fi
+    CMD="docker run -it --rm \
+        $DOCKER_SOCKET_MOUNT \
+        -v $GLITCH_VOLUME:/var/shared \
+        $DOCKER_SOCKET_GID_ADD \
+        $@"
+    echo $CMD
+    eval $CMD
+}
+
+glitch-bind-here () {
+    d0-rs $DOCKER_CWD_BIND $@ $IMAGE
 }
 
 glitch () {
