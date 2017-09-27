@@ -8,9 +8,9 @@ RUN apt-get update && apt-get install -y \
   vim \
   zsh 
 #  docker.io
-# Consider using docker.io if docker client fails due to compatibility
+# Consider using full docker.io if docker client fails due to compatibility
 
-# Get the docker client only. This could break as it is the master branch build of the client. Use the docker.io package in that case.
+# Get the docker client. 
 WORKDIR /tmp
 RUN curl -s https://master.dockerproject.org/linux/x86_64/docker.sha256 \ 
   | sed "s/build\\/linux\\/docker\\/docker/-/g" > docker.sha256 \
@@ -20,18 +20,15 @@ RUN curl -s https://master.dockerproject.org/linux/x86_64/docker.sha256 \
   && mv docker /usr/bin/docker \
   && chmod ugo+x /usr/bin/docker
 
-WORKDIR /root
-RUN mkdir workspace \
-  && mkdir workspace/bound 
-
-RUN mkdir /var/shared 
+# Set up shared volume
+RUN mkdir /var/shared/ \
+  && touch /var/shared/placeholder  
 VOLUME /var/shared
 
+WORKDIR /root
+
+# Setup up zsh
 RUN git clone git://github.com/robbyrussell/oh-my-zsh.git .oh-my-zsh 
-
-COPY zshrc.template .zshrc
-COPY .glitch_aliases .
-
-WORKDIR /root/workspace/bound
+COPY .glitch_aliases .zshrc ./
 
 CMD ["/bin/zsh"]
