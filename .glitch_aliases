@@ -7,7 +7,7 @@ alias d0-stop-all='docker stop $(docker ps -q)'
 DOCKER_SOCK=/var/run/docker.sock
 DOCKER_GID=''
 DOCKER_SOCKET_MOUNT=""
-DOCKER_CWD_BIND="-v $(pwd):/home/dev/workspace/bound"
+DOCKER_CWD_BIND="-v $(pwd):/root/workspace/bound"
 GLITCH_VOLUME='glitch-volume'
 
 docker-sock-gid () {
