@@ -29,6 +29,15 @@ WORKDIR /root
 
 # Setup up zsh
 RUN git clone git://github.com/robbyrussell/oh-my-zsh.git .oh-my-zsh 
-COPY .glitch_aliases .zshrc ./
+COPY .glitch_aliases .zshrc .vimrc ./
+
+# Solarized colors
+RUN mkdir -p ~/.vim/autoload ~/.vim/bundle && \
+    curl -LSso ~/.vim/autoload/pathogen.vim https://tpo.pe/pathogen.vim
+
+WORKDIR /root/.vim/bundle
+RUN git clone git://github.com/altercation/vim-colors-solarized.git
+
+WORKDIR /root
 
 CMD ["/bin/zsh"]
