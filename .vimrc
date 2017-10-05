@@ -1,4 +1,5 @@
 execute pathogen#infect()
+execute togglebg#map("<F5>")
 
 syntax enable   "enable syntax processing
 set t_Co=16
@@ -15,6 +16,8 @@ set number          " show line numbers
 set relativenumber
 
 set wildmenu
+set wildignore+=*.pyc,*.bmp,*.gif,*.png,*.jpg,*.pdf
+
 set showmatch       " show matching [{(
 
 set incsearch       " incremental search
